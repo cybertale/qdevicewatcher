@@ -56,6 +56,7 @@ signals:
 	void deviceAdded(const QString& dev);
 	void deviceChanged(const QString& dev); //when umounting the device
 	void deviceRemoved(const QString& dev);
+    void portChanged();
 
 protected:
 	bool running;

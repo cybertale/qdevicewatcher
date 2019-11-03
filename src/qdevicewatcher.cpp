@@ -82,6 +82,12 @@ void QDeviceWatcherPrivate::emitDeviceRemoved(const QString &dev)
 		qWarning("invoke deviceRemoved failed");
 }
 
+void QDeviceWatcherPrivate::emitPortChanged()
+{
+    if (!QMetaObject::invokeMethod(watcher, "portChanged"))
+        qWarning("invoke deviceRemoved failed");
+}
+
 void QDeviceWatcherPrivate::emitDeviceAction(const QString &dev, const QString &action)
 {
 	QString a(action.toLower());

@@ -246,8 +246,15 @@ LRESULT CALLBACK dw_internal_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
 					}
 				}
 			} else if (lpdb->dbch_devicetype == DBT_DEVTYP_PORT) {
-				zDebug("DBT_DEVTYP_PORT");
-				PDEV_BROADCAST_PORT pDevPort = (PDEV_BROADCAST_PORT)lpdb;
+                zDebug("DBT_DEVTYP_PORT");
+                zDebug("custom message");
+                PDEV_BROADCAST_PORT pDevPort = (PDEV_BROADCAST_PORT)lpdb;
+#ifdef GWLP_USERDATA
+                QDeviceWatcherPrivate *watcher = (QDeviceWatcherPrivate *)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+#else
+                QDeviceWatcherPrivate *watcher = (QDeviceWatcherPrivate *)GetWindowLong(hwnd, GWL_USERDATA);
+#endif
+                watcher->emitPortChanged();
 			} else if (lpdb->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE) {
 				//RegisterDeviceNotification()
 				zDebug("DBT_DEVTYP_DEVICEINTERFACE");

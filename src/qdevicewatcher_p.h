@@ -84,6 +84,7 @@ public:
 	void emitDeviceChanged(const QString& dev); //Linux: when umounting the device
 	void emitDeviceRemoved(const QString& dev);
 	void emitDeviceAction(const QString& dev, const QString& action);
+    void emitPortChanged();
 
 	QList<QObject*> event_receivers;
 

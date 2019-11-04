@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
   QDeviceWatcherPrivate: watching depends on platform
   Copyright (C) 2011-2015 Wang Bin <wbsecg1@gmail.com>
 
@@ -236,31 +236,35 @@ void QDeviceWatcherPrivate::parseLine(const QByteArray &line)
 	QString action_str = rx.cap(1).toLower();
 	QString dev = "/dev/" + rx.cap(2);
 #else
-	if (!line.contains("/block/")) //hotplug
-		return;
-	QString action_str = line.left(line.indexOf('@')).toLower();
-	QString dev = "/dev/" + line.right(line.length() - line.lastIndexOf('/') - 1);
+    // match both "bind@" and "unbind@".
+    if (line.contains("bind@") && line.contains("tty") ) {
+        emitPortChanged();
+//	if (!line.contains("/block/")) //hotplug
+//		return;
+        QString action_str = line.left(line.indexOf('@')).toLower();
+        QString dev = "/dev/" + line.right(line.length() - line.lastIndexOf('/') - 1);
 #endif //USE_REGEXP
-	QDeviceChangeEvent *event = 0;
+        QDeviceChangeEvent *event = 0;
 
-	if (action_str==QLatin1String("add")) {
-		emitDeviceAdded(dev);
-		event = new QDeviceChangeEvent(QDeviceChangeEvent::Add, dev);
-	} else if (action_str==QLatin1String("remove")) {
-		emitDeviceRemoved(dev);
-		event = new QDeviceChangeEvent(QDeviceChangeEvent::Remove, dev);
-	} else if (action_str==QLatin1String("change")) {
-		emitDeviceChanged(dev);
-		event = new QDeviceChangeEvent(QDeviceChangeEvent::Change, dev);
-	}
+        if (action_str==QLatin1String("add")) {
+            emitDeviceAdded(dev);
+            event = new QDeviceChangeEvent(QDeviceChangeEvent::Add, dev);
+        } else if (action_str==QLatin1String("remove")) {
+            emitDeviceRemoved(dev);
+            event = new QDeviceChangeEvent(QDeviceChangeEvent::Remove, dev);
+        } else if (action_str==QLatin1String("change")) {
+            emitDeviceChanged(dev);
+            event = new QDeviceChangeEvent(QDeviceChangeEvent::Change, dev);
+        }
 
-	zDebug("%s %s", qPrintable(action_str), qPrintable(dev));
+        zDebug("%s %s", qPrintable(action_str), qPrintable(dev));
 
-	if (event != 0 && !event_receivers.isEmpty()) {
-		foreach(QObject* obj, event_receivers) {
-			QCoreApplication::postEvent(obj, event, Qt::HighEventPriority);
-		}
-	}
+        if (event != 0 && !event_receivers.isEmpty()) {
+            foreach(QObject* obj, event_receivers) {
+                QCoreApplication::postEvent(obj, event, Qt::HighEventPriority);
+            }
+        }
+    }
 }
 
 #endif //Q_OS_LINUX

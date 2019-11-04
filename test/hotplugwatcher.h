@@ -43,13 +43,15 @@ public:
 		connect(watcher, SIGNAL(deviceAdded(QString)), this, SLOT(slotDeviceAdded(QString)), Qt::DirectConnection);
 		connect(watcher, SIGNAL(deviceChanged(QString)), this, SLOT(slotDeviceChanged(QString)), Qt::DirectConnection);
 		connect(watcher, SIGNAL(deviceRemoved(QString)), this, SLOT(slotDeviceRemoved(QString)), Qt::DirectConnection);
-		watcher->start();
+        connect(watcher, SIGNAL(portChanged()), this, SLOT(slotPortChanged()), Qt::DirectConnection);
+        watcher->start();
 	}
 
 public slots:
     void slotDeviceAdded(const QString& dev) { qDebug("tid=%#x %s: add %s", (quintptr)QThread::currentThreadId(), __PRETTY_FUNCTION__, qPrintable(dev));}
     void slotDeviceRemoved(const QString& dev) { qDebug("tid=%#x %s: remove %s", (quintptr)QThread::currentThreadId(), __PRETTY_FUNCTION__, qPrintable(dev));}
     void slotDeviceChanged(const QString& dev) { qDebug("tid=%#x %s: change %s", (quintptr)QThread::currentThreadId(), __PRETTY_FUNCTION__, qPrintable(dev));}
+    void slotPortChanged() { qDebug("port changed."); }
 protected:
 	virtual bool event(QEvent *e) {
 		if (e->type() == QDeviceChangeEvent::registeredType()) {

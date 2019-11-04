@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
 	hotplugwatcher_gui.h: gui application to watch hotplug event
     Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
 	
@@ -44,6 +44,7 @@ public slots:
 	void slotDeviceAdded(const QString& dev);
 	void slotDeviceRemoved(const QString& dev);
 	void slotDeviceChanged(const QString& dev);
+    void slotPortChanged();
 
 private:
 	QDeviceWatcher *watcher;
@@ -52,7 +53,7 @@ private:
 	QTextBrowser *msg_view;
 	QPushButton *button;
 	QToolButton *detail_button;
-	QSystemTrayIcon *tray;
+    QSystemTrayIcon *tray;
 };
 
 #endif // HOTPLUGWATCHER_GUI_H

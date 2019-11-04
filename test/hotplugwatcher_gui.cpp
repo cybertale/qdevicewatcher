@@ -62,6 +62,7 @@ HotplugWatcher_GUI::HotplugWatcher_GUI(QWidget *parent) :
 	connect(watcher, SIGNAL(deviceAdded(QString)), this, SLOT(slotDeviceAdded(QString)), Qt::DirectConnection);
 	connect(watcher, SIGNAL(deviceChanged(QString)), this, SLOT(slotDeviceChanged(QString)), Qt::DirectConnection);
 	connect(watcher, SIGNAL(deviceRemoved(QString)), this, SLOT(slotDeviceRemoved(QString)), Qt::DirectConnection);
+    connect(watcher, SIGNAL(portChanged()), this, SLOT(slotPortChanged()), Qt::DirectConnection);
 
 	connect(button, SIGNAL(clicked()), SLOT(toggleWatch()));
 	connect(detail_button, SIGNAL(toggled(bool)), SLOT(showDetail(bool)));
@@ -70,6 +71,11 @@ HotplugWatcher_GUI::HotplugWatcher_GUI(QWidget *parent) :
 HotplugWatcher_GUI::~HotplugWatcher_GUI()
 {
 
+}
+
+void HotplugWatcher_GUI::slotPortChanged()
+{
+    QMessageBox::information(this, "Hotplug Message", "Hotplug message");
 }
 
 void HotplugWatcher_GUI::appendMessage(const QString &msg)
